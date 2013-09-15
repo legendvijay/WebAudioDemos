@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+<h1>Oscillator</h1>
+
+<button onclick="init()"> Play </button><br/>
+<button onclick="stop()"> Stop </button><br/>
+
+<input id="freqSlider" type="range" value="2000" min="0" max="22000" step="1" onchange="setFilterFreq(this.value)"/>
+
+<script src="./shared.js"></script>
+
+<script type="text/javascript">
+
+window.onload = init; 
+var context, bufferLoader, source1, filter;
+
+function init() {
+	context = new webkitAudioContext();
+	bufferLoader = new BufferLoader( context,
+         ['./sounds/djembe-loop.wav' ],
+        	finishedLoading);
+      bufferLoader.load();   
+}
+
+function finishedLoading(bufferList) {
+	// Create two sources and play them both together. 
+	var source1 = context.createBufferSource();
+	source1.buffer = bufferList[0];
+	source1.loop  = true;
+    source1.noteOn(0);
+
+	filter = context.createBiquadFilter(); 
+	filter.frequency.value = 160.0;
+	filter.type = filter.LOWPASS;
+	filter.Q = 10.0;
+	
+    source1.connect(filter);
+    filter.connect(context.destination);
+}
+
+function setFilterFreq(val){
+	filter.frequency.value = val;
+}
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+<h1>Oscillator</h1>
+
+<button onclick="play()"> Play </button><br/>
+<button onclick="stop()"> Stop </button><br/>
+
+<script type="text/javascript">
+	
+var audioctx;	
+var contextClass = (window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext || window.msAudioContext);
+if (contextClass) {
+	var audioctx = new contextClass(); // Web Audio API is available. 
+} else {
+	alert("Web Audio is not supported in your browser");
+}	
+
+// 	
+var osc = audioctx.createOscillator();
+
+function play() {
+	osc.type = 1; // sine wave
+	osc.frequency.value = 280;
+	osc.connect(audioctx.destination);
+	osc.noteOn && osc.noteOn(0);
+//	osc.start(0);   // start doesn't work on Safari
+}
+
+function stop() {
+   osc.disconnect();
+//	osc = audioctx.createOscillator();
+}
+
+</script>
+</body>
+</html>
